@@ -1,128 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CashGrid v1.0</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CashGrid - Crypto Mining</title>
+<script src="https://js.paystack.co/v2/inline.js"></script>
 <style>
-/* YOUR SAME CSS - NOT TOUCHED */
-:root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:var(--light); color:#333}
-.container{max-width:900px;margin:0 auto;padding:15px}
-.hidden{display:none!important}
-.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.auth-card{background:var(--white);border-radius:16px;padding:30px;max-width:400px;width:100%;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
-.input{width:100%;padding:14px;margin:10px 0;border:1.5px solid #ddd;border-radius:10px;font-size:15px}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-weight:700;margin-top:10px;font-size:15px;cursor:pointer}
-.btn-pink{background:var(--pink);color:white}
-.btn-brown{background:var(--brown);color:white}
-.assets-card{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:20px;padding:20px;margin:15px 0}
-.assets-amount{font-size:28px;font-weight:800;color:var(--green)}
-.section-title{color:var(--brown);font-size:18px;font-weight:800;margin:20px 0 12px}
-.miner-card{background:var(--white);border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.08);padding:16px;margin-bottom:16px}
-.btn-invest{background:linear-gradient(90deg,#00C853,#00E676);color:white;border:none;padding:11px 24px;border-radius:25px;font-weight:800;font-size:14px;cursor:pointer}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999}
-.modal-content{background:white;padding:25px;border-radius:16px;width:90%;max-width:400px}
+body{font-family:Arial;background:#0a0a0a;color:#fff;margin:0;padding:20px}
+.card{background:#1a1a1a;padding:15px;margin:10px 0;border-radius:10px;border:1px solid #333}
+.btn{background:#00ff88;color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:bold;margin:5px}
+.btn:disabled{background:#555}
+input{width:90%;padding:10px;margin:5px 0;border-radius:5px;border:1px solid #333;background:#222;color:#fff}
+.hidden{display:none}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-content{background:#1a1a1a;padding:20px;border-radius:10px;width:90%;max-width:400px}
 </style>
 </head>
 <body>
 
-<!-- AUTH PAGE -->
-<div id="authPage" class="auth-wrap">
-<div class="auth-card">
-<h1 style="color:var(--brown);text-align:center">CashGrid v1.0</h1>
-<input id="email" placeholder="Email Address" class="input">
-<input id="password" type="password" placeholder="Password" class="input">
-<input id="refCodeInput" placeholder="Referral Code - Optional" class="input">
-<button onclick="handleAuth()" class="btn btn-pink" id="authBtn">Create Account</button>
-<button onclick="toggleAuth()" class="btn btn-brown" id="toggleBtn">Already have account? Login</button>
-<p id="msg" style="color:red;text-align:center"></p>
-</div>
+<div id="auth">
+ <h2>CashGrid Login</h2>
+ <input id="email" placeholder="Email">
+ <input id="password" type="password" placeholder="Password">
+ <button class="btn" onclick="login()">Login</button>
+ <button class="btn" onclick="register()">Register</button>
 </div>
 
-<!-- DASHBOARD PAGE -->
-<div id="dashboardPage" class="hidden">
-<div class="container">
-  <h2>CashGrid Dashboard</h2>
-  <div class="assets-card">
-    <div>Total Assets</div>
-    <div class="assets-amount">₦<span id="totalAssets">0</span></div>
-    <button class="btn btn-pink" onclick="openDeposit()">Deposit</button>
-    <button class="btn btn-brown" onclick="checkWithdraw()">Withdraw</button>
-  </div>
-  <div class="section-title">Mining Machines</div>
-  <div id="minersGrid"></div>
-  <button onclick="logout()" class="btn btn-red">Logout</button>
-</div>
+<div id="dashboard" class="hidden">
+ <h2>Welcome to CashGrid</h2>
+ <div class="card">
+   <h3>Balance: ₦<span id="balance">0</span></h3>
+   <button class="btn" onclick="showDeposit()">Deposit</button>
+   <button class="btn" onclick="showWithdraw()">Withdraw</button>
+ </div>
+
+ <div class="card">
+   <h3>Buy Miner</h3>
+   <p>Miner 1: ₦5000 → ₦500/day for 20 days</p>
+   <button class="btn" onclick="buyMiner(1,5000)">Buy Miner 1</button>
+   <p>Miner 2: ₦10000 → ₦1000/day for 20 days</p>
+   <button class="btn" onclick="buyMiner(2,10000)">Buy Miner 2</button>
+ </div>
+
+ <div class="card">
+   <h3>Transactions</h3>
+   <div id="transactions">Loading...</div>
+ </div>
 </div>
 
-<!-- MODALS -->
-<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-pink">Deposit Now</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
+<!-- DEPOSIT MODAL -->
+<div id="depositModal" class="modal hidden">
+ <div class="modal-content">
+   <h3>Deposit with Paystack</h3>
+   <input id="depositAmount" type="number" placeholder="Min ₦5000">
+   <button class="btn" onclick="payWithPaystack()">Pay Now</button>
+   <button class="btn" onclick="closeDeposit()">Cancel</button>
+ </div>
+</div>
+
+<!-- WITHDRAW MODAL -->
+<div id="withdrawModal" class="modal hidden">
+ <div class="modal-content">
+   <h3>Withdraw - 18% Tax</h3>
+   <p>Rule: You must Deposit + Buy Miner first</p>
+   <input id="wAmount" type="number" placeholder="Amount Min ₦1000">
+   <input id="wBank" placeholder="Bank Name">
+   <input id="wAccount" placeholder="Account Number">
+   <input id="wName" placeholder="Account Name">
+   <button class="btn" onclick="requestWithdraw()">Submit Request</button>
+   <button class="btn" onclick="closeWithdraw()">Cancel</button>
+ </div>
+</div>
 
 <script>
-const API_URL = "http://localhost:3000/api" // CHANGE THIS TO YOUR HOSTED BACKEND LATER
-let token = localStorage.getItem('token')
-let isLogin = false, currentUser = null
+const API = 'https://your-render-url.onrender.com/api'; // WE WILL CHANGE THIS AFTER DEPLOY
+let token = localStorage.getItem('token');
+let data = {}; // to store user data
 
-async function api(endpoint, method='GET', body=null){
-  const res = await fetch(API_URL+endpoint,{
-    method,
-    headers:{'Content-Type':'application/json','Authorization':token},
-    body: body?JSON.stringify(body):null
-  })
-  return res.json()
+if(token) loadDashboard();
+
+async function api(url,method='GET',body=null){
+ const res = await fetch(API+url,{
+   method,
+   headers:{'Content-Type':'application/json','Authorization':token},
+   body: body?JSON.stringify(body):null
+ });
+ return res.json();
 }
 
-window.onload = function(){ if(token) {loadDashboard()} renderMiners() }
-function toggleAuth(){isLogin=!isLogin;authBtn.innerText=isLogin?"Login":"Create Account";toggleBtn.innerText=isLogin?"Need an account? Sign Up":"Already have account? Login"}
+async function register(){
+ const email = document.getElementById('email').value;
+ const password = document.getElementById('password').value;
+ const res = await api('/register','POST',{email,password});
+ if(res.token){token=res.token;localStorage.setItem('token',token);loadDashboard();}
+ else alert(res.msg);
+}
 
-async function handleAuth(){
-  const e=email.value.trim(), p=password.value.trim(), r=refCodeInput.value.trim(); msg.innerText="";
-  const endpoint = isLogin?'/login':'/register'
-  const data = await api(endpoint,'POST',{email:e,password:p,refCode:r})
-  if(data.msg){msg.innerText=data.msg;return}
-  token=data.token; localStorage.setItem('token',token); loadDashboard()
+async function login(){
+ const email = document.getElementById('email').value;
+ const password = document.getElementById('password').value;
+ const res = await api('/login','POST',{email,password});
+ if(res.token){token=res.token;localStorage.setItem('token',token);loadDashboard();}
+ else alert(res.msg);
 }
 
 async function loadDashboard(){
-  authPage.classList.add('hidden');dashboardPage.classList.remove('hidden');
-  currentUser = await api('/me')
-  updateAssets()
+ document.getElementById('auth').classList.add('hidden');
+ document.getElementById('dashboard').classList.remove('hidden');
+ data = await api('/me'); // STORE USER DATA HERE
+ document.getElementById('balance').innerText = data.balance;
+ let txHtml = data.transactions.map(t=>`<p>${t.type} ₦${t.amount} - ${t.status} - ${t.note}</p>`).join('');
+ document.getElementById('transactions').innerHTML = txHtml;
 }
 
-function updateAssets(){
-  totalAssets.innerText = (currentUser.balance + currentUser.commission).toLocaleString();
+// PAYSTACK
+function showDeposit(){document.getElementById('depositModal').classList.remove('hidden')}
+function closeDeposit(){document.getElementById('depositModal').classList.add('hidden')}
+
+async function payWithPaystack(){
+ const amount = document.getElementById('depositAmount').value;
+ const res = await api('/paystack/init','POST',{amount});
+ if(res.url){
+   const handler = PaystackPop.setup({
+     key: 'pk_test_d9f28dadb81148cebc6ea0e9c4dbb72302b43f87', // YOUR PUBLIC KEY
+     email: data.email, // USES LOGGED IN USER EMAIL
+     amount: amount*100,
+     ref: res.reference,
+     callback: async function(response){
+       await api('/paystack/verify','POST',{reference:response.reference});
+       alert('Deposit successful');
+       closeDeposit();
+       loadDashboard();
+     },
+     onClose: function(){alert('Payment cancelled')}
+   });
+   handler.openIframe();
+ } else {alert(res.msg)}
 }
 
-function openDeposit(){depositModal.classList.remove('hidden')}
-function closeModal(){depositModal.classList.add('hidden')}
+// WITHDRAW
+function showWithdraw(){document.getElementById('withdrawModal').classList.remove('hidden')}
+function closeWithdraw(){document.getElementById('withdrawModal').classList.add('hidden')}
 
-async function deposit(){
-  let amt=parseInt(depositAmt.value);if(amt<5000)return alert("Min ₦5000");
-  await api('/deposit','POST',{amount:amt});
-  depositAmt.value="";closeModal();currentUser=await api('/me');updateAssets()
+async function requestWithdraw(){
+ const amount = document.getElementById('wAmount').value;
+ const bank = document.getElementById('wBank').value;
+ const account = document.getElementById('wAccount').value;
+ const name = document.getElementById('wName').value;
+ const res = await api('/withdraw','POST',{amount,bank,account,name});
+ alert(res.msg);
+ closeWithdraw();
+ loadDashboard();
 }
-
-async function checkWithdraw(){
-  if(!currentUser.has_deposited ||!currentUser.has_purchased){
-    return alert("🚫 Withdrawal Locked. Deposit and Buy miner first")
-  }
-  alert("Withdraw function ready. ADD to modal if you want")
-}
-
-const MINERS = [
- {id:1,name:"CashGrid S1",price:5000,daily:500,total:10000,term:20,img:"https://cdn-icons-png.flaticon.com/512/6295/6295417.png"},
- {id:2,name:"CashGrid S2",price:10000,daily:1000,total:20000,term:20,img:"https://cdn-icons-png.flaticon.com/512/6295/6295417.png"}
-]
-
-function renderMiners(){minersGrid.innerHTML=MINERS.map(m=>`<div class="miner-card"><h3>${m.name}</h3><p>Price: ₦${m.price.toLocaleString()}</p><p>Daily: ₦${m.daily.toLocaleString()}</p><button onclick="buyMiner(${m.id},${m.price})" class="btn-invest">Invest</button></div>`).join('')}
 
 async function buyMiner(id,price){
-  await api('/buy-miner','POST',{minerId:id,price:price});
-  alert("Miner Purchased!"); currentUser=await api('/me'); updateAssets()
+ const res = await api('/buy-miner','POST',{minerId:id,price});
+ alert(res.msg);
+ loadDashboard();
 }
-
-function logout(){localStorage.removeItem('token'); location.reload()}
 </script>
 </body>
 </html>
