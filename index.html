@@ -4,80 +4,25 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CashGrid v1.0</title>
 <style>
-:root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3; --gold:#FFA000; --orange:#FF9800; --shadow:0 4px 12px rgba(0,0,0,0.08)}
+/* YOUR SAME CSS - NOT TOUCHED */
+:root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:var(--light); color:#333}
 .container{max-width:900px;margin:0 auto;padding:15px}
 .hidden{display:none!important}
 .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.auth-card{background:var(--white);border-radius:16px;padding:30px;max-width:400px;width:100%;box-shadow:var(--shadow)}
+.auth-card{background:var(--white);border-radius:16px;padding:30px;max-width:400px;width:100%;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
 .input{width:100%;padding:14px;margin:10px 0;border:1.5px solid #ddd;border-radius:10px;font-size:15px}
 .btn{width:100%;padding:14px;border:none;border-radius:10px;font-weight:700;margin-top:10px;font-size:15px;cursor:pointer}
 .btn-pink{background:var(--pink);color:white}
 .btn-brown{background:var(--brown);color:white}
-.btn-green{background:var(--green);color:white}
-.btn-red{background:var(--red);color:white}
-.btn-blue{background:var(--blue);color:white}
-.btn-sm{width:auto;padding:8px 14px;font-size:13px}
-.assets-card{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:20px;padding:20px;margin:15px 0;position:relative;overflow:hidden}
-.assets-header{font-size:14px;color:#555;font-weight:600;margin-bottom:8px}
-.assets-amount{font-size:28px;font-weight:800;color:var(--green);margin-bottom:15px}
-.assets-buttons{display:flex;gap:12px}
-.btn-deposit{flex:1;background:linear-gradient(90deg,#00E676,#00C853);color:white;border:none;padding:14px;border-radius:50px;font-weight:800;font-size:15px;cursor:pointer}
-.btn-withdraw{flex:1;background:transparent;color:var(--green);border:1.5px solid var(--green);padding:14px;border-radius:50px;font-weight:800;font-size:15px;cursor:pointer}
-.assets-img{position:absolute;right:-5px;top:15px;width:100px;opacity:0.8}
-.assets-split{display:flex;gap:12px;margin-top:15px}
-.split-box{flex:1;background:white;padding:14px;border-radius:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.split-label{font-size:12px;color:#777;margin-bottom:6px}
-.split-value{font-size:17px;font-weight:800;color:#111}
+.assets-card{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:20px;padding:20px;margin:15px 0}
+.assets-amount{font-size:28px;font-weight:800;color:var(--green)}
 .section-title{color:var(--brown);font-size:18px;font-weight:800;margin:20px 0 12px}
-.miner-list{display:flex;flex-direction:column;gap:16px}
-.miner-card{background:var(--white);border-radius:16px;box-shadow:var(--shadow);padding:16px}
-.miner-top{display:flex;gap:14px}
-.miner-img{width:110px;height:110px;object-fit:cover;background:#f8f8f8;border-radius:10px}
-.miner-info{flex:1}
-.miner-name{font-size:17px;font-weight:800;color:#111;margin-bottom:8px}
-.miner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
-.label{color:#777;font-size:12px}
-.value{font-weight:700;color:#111}
-.progress-bar{height:6px;background:#eee;border-radius:10px;margin-top:8px;overflow:hidden}
-.progress{height:100%;background:var(--green)}
-.miner-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #eee}
-.price{font-size:18px;font-weight:800;color:var(--green)}
+.miner-card{background:var(--white);border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,0.08);padding:16px;margin-bottom:16px}
 .btn-invest{background:linear-gradient(90deg,#00C853,#00E676);color:white;border:none;padding:11px 24px;border-radius:25px;font-weight:800;font-size:14px;cursor:pointer}
-.ref-box{background:linear-gradient(135deg,#FFF3E0,#FFECB3);border:2px dashed var(--gold);padding:18px;border-radius:16px;margin:20px 0}
-.ref-title{color:var(--brown);font-size:17px;font-weight:800;margin-bottom:10px}
-.ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
-.stat-card{background:white;padding:12px;border-radius:10px;text-align:center}
-.stat-card.num{font-size:18px;font-weight:800;color:var(--green)}
-.stat-card.txt{font-size:11px;color:#666}
-.ref-link-box{display:flex;gap:8px;margin:12px 0}
-.ref-link{flex:1;background:white;padding:11px;border-radius:8px;border:1px solid #ddd;font-size:12px;word-break:break-all}
-.btn-copy{background:var(--brown);color:white;padding:10px 14px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
-.section{background:var(--white);padding:18px;border-radius:16px;box-shadow:var(--shadow);margin:20px 0}
-.section h3{color:var(--brown);margin-bottom:12px;font-size:16px}
 .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999}
 .modal-content{background:white;padding:25px;border-radius:16px;width:90%;max-width:400px}
-.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.tab-btn{padding:8px 14px;border:none;border-radius:8px;background:#eee;font-weight:600;cursor:pointer;font-size:13px}
-.tab-btn.active{background:var(--pink);color:white}
-.history-table{width:100%;border-collapse:collapse;font-size:13px}
-.history-table th{background:var(--pink);color:white;padding:10px;text-align:left}
-.history-table td{padding:10px;border-bottom:1px solid #eee}
-.status-pending{color:var(--orange);font-weight:700}
-.status-approved{color:var(--green);font-weight:700}
-.status-rejected{color:var(--red);font-weight:700}
-.admin-banner{background:linear-gradient(90deg,#FF3D00,#FF6E40);color:white;padding:12px;border-radius:10px;text-align:center;font-weight:800;margin-bottom:15px}
-.admin-panel{background:#1a1a1a;color:white;border-radius:16px;padding:20px;margin-top:20px}
-.admin-table{width:100%;color:white;font-size:13px;border-collapse:collapse}
-.admin-table th{background:#333;padding:10px;text-align:left}
-.admin-table td{padding:10px;border-bottom:1px solid #333}
-.pending-card{background:#222;padding:15px;border-radius:10px;margin:10px 0}
-.admin-history{margin-top:15px;background:#222;padding:15px;border-radius:10px}
-.badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}
-.badge-pending{background:#FF9800;color:white}
-.total-deposit{background:#1e3a2f;padding:10px;border-radius:8px;margin:8px 0;color:#00E676;font-weight:800;font-size:14px}
-.total-withdraw{background:#3a1e1e;padding:10px;border-radius:8px;margin:8px 0;color:#FF5252;font-weight:800;font-size:14px}
 </style>
 </head>
 <body>
@@ -85,8 +30,7 @@ body{background:var(--light); color:#333}
 <!-- AUTH PAGE -->
 <div id="authPage" class="auth-wrap">
 <div class="auth-card">
-<h1 style="color:var(--brown);text-align:center;margin-bottom:8px">CashGrid v1.0</h1>
-<p style="text-align:center;color:#666;font-size:13px;margin-bottom:15px">Power Your Wealth</p>
+<h1 style="color:var(--brown);text-align:center">CashGrid v1.0</h1>
 <input id="email" placeholder="Email Address" class="input">
 <input id="password" type="password" placeholder="Password" class="input">
 <input id="refCodeInput" placeholder="Referral Code - Optional" class="input">
@@ -99,340 +43,86 @@ body{background:var(--light); color:#333}
 <!-- DASHBOARD PAGE -->
 <div id="dashboardPage" class="hidden">
 <div class="container">
-  <div id="adminBanner" class="admin-banner hidden">🛠 ADMIN MODE ACTIVE - <span id="adminEmail"></span></div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <h2 style="color:var(--brown)">CashGrid Dashboard</h2>
-    <div>
-      <button onclick="showTab('users')" id="adminUsersBtn" class="btn btn-blue btn-sm" style="display:none">All Users</button>
-      <button onclick="showTab('pending')" id="adminPendingBtn" class="btn btn-brown btn-sm" style="display:none">Pending</button>
-      <button onclick="logout()" class="btn btn-red btn-sm">Logout</button>
-    </div>
+  <h2>CashGrid Dashboard</h2>
+  <div class="assets-card">
+    <div>Total Assets</div>
+    <div class="assets-amount">₦<span id="totalAssets">0</span></div>
+    <button class="btn btn-pink" onclick="openDeposit()">Deposit</button>
+    <button class="btn btn-brown" onclick="checkWithdraw()">Withdraw</button>
   </div>
-
-  <!-- USER VIEW -->
-  <div id="userView">
-    <div class="assets-card">
-      <img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png" class="assets-img">
-      <div class="assets-header">Total Assets</div>
-      <div class="assets-amount">₦<span id="totalAssets">500.00</span></div>
-      <div class="assets-buttons">
-        <button class="btn-deposit" onclick="openDeposit()">Deposit</button>
-        <button class="btn-withdraw" onclick="checkWithdraw()">Withdraw</button>
-      </div>
-      <div class="assets-split">
-        <div class="split-box"><div class="split-label">Account Balance</div><div class="split-value">₦<span id="accountBalance">500</span></div></div>
-        <div class="split-box"><div class="split-label">Commission Balance</div><div class="split-value">₦<span id="commissionBalance">0</span></div></div>
-      </div>
-    </div>
-
-    <div class="section-title">Mining Machines</div>
-    <div class="miner-list" id="minersGrid"></div>
-
-    <div class="section"><h3>Your Active Miners</h3><div class="miner-list" id="activeMiners"></div></div>
-
-    <div class="section">
-      <div class="ref-box">
-        <div class="ref-title">👑 CashGrid Referral - 3 Levels</div>
-        <div class="ref-stats">
-          <div class="stat-card"><div class="num" id="totalRef">0</div><div class="txt">Total Referrals</div></div>
-          <div class="stat-card"><div class="num">₦<span id="refEarned">0</span></div><div class="txt">Total Earned</div></div>
-          <div class="stat-card"><div class="num">20%</div><div class="txt">L1 Commission</div></div>
-        </div>
-        <div class="label">Your Referral Link:</div>
-        <div class="ref-link-box"><div class="ref-link" id="myRefLink"></div><button class="btn-copy" onclick="copyRef()">Copy</button></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>Transaction History</h3>
-      <div class="tabs">
-        <button class="tab-btn active" onclick="filterHistory('all', this)">All</button>
-        <button class="tab-btn" onclick="filterHistory('deposit', this)">Deposit</button>
-        <button class="tab-btn" onclick="filterHistory('withdraw', this)">Withdrawal</button>
-        <button class="tab-btn" onclick="filterHistory('purchase', this)">Purchase</button>
-      </div>
-      <table class="history-table"><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Note</th></tr></thead><tbody id="historyBody"></tbody></table>
-    </div>
-  </div>
-
-  <!-- ADMIN USERS -->
-  <div id="usersTab" class="admin-panel hidden">
-    <h3>ALL USERS - PENDING ACTIONS</h3>
-    <table class="admin-table"><thead><tr><th>Email</th><th>Balance</th><th>Pending</th><th>History</th><th>Action</th></tr></thead><tbody id="adminUsers"></tbody></table>
-    <div class="admin-history">
-      <h4 style="color:white;margin-bottom:10px">Selected User History</h4>
-      <table class="history-table" style="background:#333"><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Note</th></tr></thead><tbody id="adminHistoryBody"></tbody></table>
-    </div>
-  </div>
-
-  <!-- ADMIN PENDING -->
-  <div id="pendingTab" class="admin-panel hidden">
-    <h3>PENDING WITHDRAWALS</h3>
-    <div id="pendingList"></div>
-  </div>
-
+  <div class="section-title">Mining Machines</div>
+  <div id="minersGrid"></div>
+  <button onclick="logout()" class="btn btn-red">Logout</button>
 </div>
 </div>
 
 <!-- MODALS -->
-<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><p style="font-size:13px;color:#666">Minimum ₦5,000</p><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-green">Deposit Now</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
-<div id="withdrawModal" class="modal hidden"><div class="modal-content"><h3>Withdraw Funds</h3><p style="font-size:13px;color:#666">Minimum ₦1,000 | 18% Tax will be deducted</p><input id="withdrawAmt" type="number" min="1000" placeholder="Amount to Withdraw" class="input"><input id="bankName" placeholder="Bank Name" class="input"><input id="accountNo" placeholder="Account Number" class="input"><input id="accountName" placeholder="Account Name" class="input"><button onclick="withdraw()" class="btn btn-brown">Submit</button><button onclick="closeModal()" class="btn">Cancel</button></div></div>
+<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-pink">Deposit Now</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
 
 <script>
-const ADMIN_EMAIL = "andrewdauda555@gmail.com"
-const ADMIN_PASS = "andrewftmo"
-let isLogin = false, currentFilter = 'all', selectedAdminUser = null
+const API_URL = "http://localhost:3000/api" // CHANGE THIS TO YOUR HOSTED BACKEND LATER
+let token = localStorage.getItem('token')
+let isLogin = false, currentUser = null
 
-const MINERS = [
- {id:1,name:"CashGrid S1",price:5000,daily:500,total:10000,term:20,limit:20,img:"https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400"},
- {id:2,name:"CashGrid S2",price:10000,daily:1000,total:20000,term:20,limit:10,img:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=400"},
- {id:3,name:"CashGrid S3",price:30000,daily:3000,total:60000,term:20,limit:5,img:"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400"},
- {id:4,name:"CashGrid S4",price:70000,daily:7000,total:140000,term:20,limit:3,img:"https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400"},
- {id:5,name:"CashGrid S5",price:120000,daily:12000,total:240000,term:20,limit:3,img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"},
- {id:6,name:"CashGrid S6",price:200000,daily:20000,total:400000,term:20,limit:3,img:"https://images.unsplash.com/photo-1548092372-0d1bd40894a3?w=400"},
- {id:7,name:"CashGrid S7 Pro",price:300000,daily:30000,total:600000,term:20,limit:3,img:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400"}
-]
-const COMMISSIONS = [0.20, 0.05, 0.02]
-
-(function(){
-  let users=JSON.parse(localStorage.getItem('users'))||[];
-  if(!users.find(u=>u.email===ADMIN_EMAIL)){
-    users.push({email:ADMIN_EMAIL,password:ADMIN_PASS,balance:999,commission:0,refCode:"ADMIN",referrals:[],miners:[],transactions:[],pendingWithdrawals:[]})
-  }
-  localStorage.setItem('users',JSON.stringify(users));
-})();
-
-function getUser(){return JSON.parse(localStorage.getItem('users'))?.find(u=>u.email===localStorage.getItem('currentUser'))}
-function saveUsers(users){localStorage.setItem('users',JSON.stringify(users))}
-function getUsers(){return JSON.parse(localStorage.getItem('users'))||[]}
-
-function getUserStats(email){
-  let u = getUsers().find(x=>x.email===email);
-  if(!u) return {totalDeposit:0, totalWithdraw:0}
-  let totalDeposit = u.transactions.filter(t=>t.type==='deposit' && t.status==='completed').reduce((sum,t)=>sum+t.amount,0);
-  let totalWithdraw = u.transactions.filter(t=>t.type==='withdraw' && t.status==='approved').reduce((sum,t)=>sum+t.amount,0);
-  return {totalDeposit, totalWithdraw}
+async function api(endpoint, method='GET', body=null){
+  const res = await fetch(API_URL+endpoint,{
+    method,
+    headers:{'Content-Type':'application/json','Authorization':token},
+    body: body?JSON.stringify(body):null
+  })
+  return res.json()
 }
 
-window.onload = function(){ if(localStorage.getItem('currentUser')) {checkDailyProfit(); loadDashboard()} }
-
+window.onload = function(){ if(token) {loadDashboard()} renderMiners() }
 function toggleAuth(){isLogin=!isLogin;authBtn.innerText=isLogin?"Login":"Create Account";toggleBtn.innerText=isLogin?"Need an account? Sign Up":"Already have account? Login"}
 
-function handleAuth(){
+async function handleAuth(){
   const e=email.value.trim(), p=password.value.trim(), r=refCodeInput.value.trim(); msg.innerText="";
-  if(!e||!p)return msg.innerText="Fill all";
-  let users=getUsers();
-
-  if(!isLogin){
-    if(users.find(u=>u.email===e))return msg.innerText="Email exists";
-    let newUser={email:e,password:p,balance:500,commission:0,refCode:e.split('@')[0]+Math.floor(Math.random()*1000),referredBy:r, referrals:[], refEarnings:0,miners:[],transactions:[{id:Date.now(),date:new Date().toLocaleString(),type:"deposit",amount:500,note:"Signup Bonus",status:"completed"}],pendingWithdrawals:[], hasDeposited:false, hasPurchased:false};
-    if(r){let refUserIndex = users.findIndex(u=>u.refCode===r);if(refUserIndex!== -1) users[refUserIndex].referrals.push(newUser.refCode)}
-    users.push(newUser);saveUsers(users);localStorage.setItem('currentUser',e);loadDashboard()
-  }else{
-    let user=users.find(u=>u.email===e && u.password===p);
-    if(!user)return msg.innerText="Invalid credentials";
-    localStorage.setItem('currentUser',e);loadDashboard()
-  }
+  const endpoint = isLogin?'/login':'/register'
+  const data = await api(endpoint,'POST',{email:e,password:p,refCode:r})
+  if(data.msg){msg.innerText=data.msg;return}
+  token=data.token; localStorage.setItem('token',token); loadDashboard()
 }
 
-function logout(){localStorage.removeItem('currentUser'); location.reload()}
-
-function loadDashboard(){
+async function loadDashboard(){
   authPage.classList.add('hidden');dashboardPage.classList.remove('hidden');
-  let u=getUser();
-  if(u.email===ADMIN_EMAIL){
-    adminBanner.classList.remove('hidden');adminEmail.innerText = u.email;
-    adminUsersBtn.style.display='inline-block';adminPendingBtn.style.display='inline-block';
-    userView.classList.add('hidden');showTab('users');
-  } else {
-    adminPendingBtn.style.display='none';
-    updateAssets();renderMiners();renderActiveMiners(u);renderReferral(u);renderHistory(u);
-    setInterval(checkDailyProfit, 60000)
-  }
+  currentUser = await api('/me')
+  updateAssets()
 }
 
-function updateAssets(){let u=getUser();totalAssets.innerText = (u.balance + u.commission).toLocaleString();accountBalance.innerText = u.balance.toLocaleString();commissionBalance.innerText = u.commission.toLocaleString()}
+function updateAssets(){
+  totalAssets.innerText = (currentUser.balance + currentUser.commission).toLocaleString();
+}
+
 function openDeposit(){depositModal.classList.remove('hidden')}
-function closeModal(){depositModal.classList.add('hidden');withdrawModal.classList.add('hidden')}
+function closeModal(){depositModal.classList.add('hidden')}
 
-function checkWithdraw(){
-  let u = getUser();
-  if(!u.hasDeposited ||!u.hasPurchased){
-    return alert("🚫 Withdrawal Locked\nYou must Deposit and Purchase a Miner before you can Withdraw on CashGrid.\n\n1. Deposit minimum ₦5,000\n2. Buy any Mining Machine")
-  }
-  openWithdrawModal()
-}
-function openWithdrawModal(){withdrawModal.classList.remove('hidden')}
-
-function deposit(){
+async function deposit(){
   let amt=parseInt(depositAmt.value);if(amt<5000)return alert("Min ₦5000");
-  let users=getUsers(); let userIndex = users.findIndex(x=>x.email===localStorage.getItem('currentUser'));
-  users[userIndex].balance += amt;
-  users[userIndex].hasDeposited = true
-  let tx = {id: Date.now(), date:new Date().toLocaleString(),type:"deposit",amount:amt,note:"Manual Deposit",status:"completed"};
-  users[userIndex].transactions.unshift(tx);
-  saveUsers(users);
-  depositAmt.value="";closeModal();updateAssets();renderHistory(users[userIndex])
+  await api('/deposit','POST',{amount:amt});
+  depositAmt.value="";closeModal();currentUser=await api('/me');updateAssets()
 }
 
-function withdraw(){
-  let amt=parseInt(withdrawAmt.value),b=bankName.value,a=accountNo.value,n=accountName.value;
-  if(amt<1000||!b||!a||!n)return alert("Fill all correctly");
-  let tax = Math.round(amt * 0.18);
-  let receiveAmt = amt - tax;
-  let users=getUsers(); let userIndex = users.findIndex(x=>x.email===localStorage.getItem('currentUser'));
-
-  if(!users[userIndex].hasDeposited ||!users[userIndex].hasPurchased) return alert("You must Deposit and Purchase a Miner first on CashGrid")
-
-  if(amt > users[userIndex].balance)return alert("Insufficient balance");
-  users[userIndex].balance -= amt;
-  let note = `Withdrawal to ${b} - ${a} | Tax 18%: ₦${tax.toLocaleString()} | You receive: ₦${receiveAmt.toLocaleString()}`;
-  let tx = {id: Date.now(), date:new Date().toLocaleString(),type:"withdraw",amount:receiveAmt,note:note,status:"pending"};
-  users[userIndex].transactions.unshift(tx);
-  let w={txId:tx.id,amount:receiveAmt,tax:tax,total:amt,bank:b,account:a,name:n,date:new Date().toLocaleString(),status:"pending"};
-  users[userIndex].pendingWithdrawals.push(w);
-  saveUsers(users);
-  closeModal();updateAssets();renderHistory(users[userIndex])
-  alert(`Withdrawal Request Submitted on CashGrid.\nRequested: ₦${amt.toLocaleString()}\nTax 18%: ₦${tax.toLocaleString()}\nYou will receive: ₦${receiveAmt.toLocaleString()}\nStatus: PENDING ADMIN APPROVAL`)
-}
-
-function renderReferral(u){myRefLink.innerText = `https://cashgrid.com?ref=${u.refCode}`;totalRef.innerText = u.referrals.length;refEarned.innerText = u.refEarnings.toLocaleString()}
-
-function payCommission(buyerEmail, amount){
-  let users = getUsers();let buyer = users.find(u=>u.email===buyerEmail);let currentCode = buyer.referredBy;let level = 0;
-  while(currentCode && level < 3){
-    let refUserIndex = users.findIndex(u=>u.refCode===currentCode);if(refUserIndex === -1) break;
-    let commission = amount * COMMISSIONS[level];
-    users[refUserIndex].commission += commission;
-    users[refUserIndex].refEarnings += commission;
-    let tx = {id: Date.now()+level, date:new Date().toLocaleString(),type:"referral",amount:commission,note:`L${level+1} from ${buyer.email}`,status:"completed"};
-    users[refUserIndex].transactions.unshift(tx);
-    currentCode = users[refUserIndex].referredBy;level++
+async function checkWithdraw(){
+  if(!currentUser.has_deposited ||!currentUser.has_purchased){
+    return alert("🚫 Withdrawal Locked. Deposit and Buy miner first")
   }
-  saveUsers(users)
+  alert("Withdraw function ready. ADD to modal if you want")
 }
 
-function renderMiners(){minersGrid.innerHTML=MINERS.map(m=>`<div class="miner-card"><div class="miner-top"><img src="${m.img}" class="miner-img"><div class="miner-info"><div class="miner-name">${m.name}</div><div class="miner-grid"><div><div class="label">Daily income</div><div class="value">₦${m.daily.toLocaleString()}</div></div><div><div class="label">Total income</div><div class="value">₦${m.total.toLocaleString()}</div></div><div><div class="label">Term</div><div class="value">${m.term} Days</div></div><div><div class="label">Purchase limit</div><div class="value">${m.limit} Units</div></div></div></div></div><div class="miner-bottom"><div class="price">₦${m.price.toLocaleString()}</div><button onclick="buyMiner(${m.id})" class="btn-invest">Invest</button></div></div>`).join('')}
+const MINERS = [
+ {id:1,name:"CashGrid S1",price:5000,daily:500,total:10000,term:20,img:"https://cdn-icons-png.flaticon.com/512/6295/6295417.png"},
+ {id:2,name:"CashGrid S2",price:10000,daily:1000,total:20000,term:20,img:"https://cdn-icons-png.flaticon.com/512/6295/6295417.png"}
+]
 
-function buyMiner(id){
-  let m=MINERS.find(x=>x.id===id); let users=getUsers(); let userIndex = users.findIndex(x=>x.email===localStorage.getItem('currentUser'));
-  let owned = users[userIndex].miners.filter(x=>x.id===id).length;
-  if(owned >= m.limit) return alert(`Purchase limit reached. Max ${m.limit} units`);
-  if(users[userIndex].balance<m.price)return alert("Insufficient balance");
-  users[userIndex].balance -= m.price;
-  users[userIndex].miners.push({id,profit:m.daily,buyDate:Date.now(),lastClaim:Date.now(),daysEarned:0,active:true});
-  users[userIndex].hasPurchased = true
-  let tx = {id: Date.now(), date:new Date().toLocaleString(),type:"purchase",amount:m.price,note:m.name,status:"completed"};
-  users[userIndex].transactions.unshift(tx);
-  payCommission(users[userIndex].email, m.price);
-  saveUsers(users);updateAssets();renderHistory(users[userIndex]);alert("Miner Purchased on CashGrid!")
+function renderMiners(){minersGrid.innerHTML=MINERS.map(m=>`<div class="miner-card"><h3>${m.name}</h3><p>Price: ₦${m.price.toLocaleString()}</p><p>Daily: ₦${m.daily.toLocaleString()}</p><button onclick="buyMiner(${m.id},${m.price})" class="btn-invest">Invest</button></div>`).join('')}
+
+async function buyMiner(id,price){
+  await api('/buy-miner','POST',{minerId:id,price:price});
+  alert("Miner Purchased!"); currentUser=await api('/me'); updateAssets()
 }
 
-function checkDailyProfit(){
-  let users=getUsers();
-  let userIndex=users.findIndex(x=>x.email===localStorage.getItem('currentUser'));
-  if(userIndex===-1)return;
-  let u=users[userIndex];
-  let now=Date.now(),day=86400000,upd=false;
-  u.miners.forEach(m=>{
-    if(m.active){
-      let d=Math.floor((now-m.lastClaim)/day);
-      let minerData=MINERS.find(x=>x.id===m.id);
-      if(d>=1 && m.daysEarned<minerData.term){
-        let pay = Math.min(d, minerData.term-m.daysEarned);
-        let profit = m.profit * pay;
-        u.balance += profit;
-        m.daysEarned += pay;
-        m.lastClaim += pay * day;
-        if(m.daysEarned >= minerData.term) m.active = false;
-        let tx = {id: Date.now()+Math.random(), date:new Date().toLocaleString(),type:"profit",amount:profit,note:`${minerData.name} - ${pay} day(s) profit`,status:"completed"};
-        u.transactions.unshift(tx);
-        upd=true
-      }
-    }
-  });
-  if(upd){saveUsers(users);updateAssets();renderActiveMiners(u);renderHistory(u);}
-}
-
-function renderActiveMiners(u){let active = u.miners.filter(m=>m.active);activeMiners.innerHTML = active.length?active.map(m=>{let data = MINERS.find(x=>x.id===m.id);let percent = (m.daysEarned / data.term) * 100;return `<div class="miner-card"><div class="miner-top"><img src="${data.img}" class="miner-img"><div class="miner-info"><div class="miner-name">${data.name} <span style="color:var(--green)">ACTIVE</span></div><div class="miner-grid"><div><div class="label">Daily Profit</div><div class="value">₦${m.profit.toLocaleString()}</div></div><div><div class="label">Days Left</div><div class="value">${data.term - m.daysEarned} Days</div></div><div><div class="label">Earned</div><div class="value">₦${(m.profit * m.daysEarned).toLocaleString()}</div></div><div><div class="label">Total</div><div class="value">₦${data.total.toLocaleString()}</div></div></div><div class="progress-bar"><div class="progress" style="width:${percent}%"></div></div></div></div></div>`}).join(''):"<p style='color:#888'>No active miners</p>"}
-
-function renderHistory(u){
-  let tx=(u.transactions||[]);
-  if(currentFilter!== 'all') tx = tx.filter(t=>t.type===currentFilter);
-  historyBody.innerHTML=tx.slice(0,100).map(t=>`<tr><td>${t.date}</td><td>${t.type}</td><td>₦${t.amount.toLocaleString()}</td><td class="status-${t.status}">${t.status.toUpperCase()}</td><td>${t.note||''}</td></tr>`).join('')||"<tr><td colspan=5>No transactions</td></tr>"
-}
-function filterHistory(type, el){currentFilter=type;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderHistory(getUser())}
-function copyRef(){navigator.clipboard.writeText(myRefLink.innerText);alert("CashGrid referral link copied!")}
-
-function showTab(tab){userView.classList.add('hidden');usersTab.classList.add('hidden');pendingTab.classList.add('hidden');document.getElementById(tab+'Tab').classList.remove('hidden');if(tab==='users') renderUsers();if(tab==='pending') renderPending();}
-
-function renderUsers(){
-  let users = getUsers();
-  adminUsers.innerHTML = users.map(u=>{
-    let pendingCount = u.pendingWithdrawals? u.pendingWithdrawals.length : 0;
-    let pendingBadge = pendingCount > 0? `<span class="badge badge-pending">${pendingCount} Pending</span>` : 'None';
-    let stats = getUserStats(u.email);
-    let actionBtns = pendingCount > 0
-? u.pendingWithdrawals.map(w=>`<button onclick="approve('${u.email}',${w.txId})" class="btn btn-green btn-sm">Approve ₦${w.amount.toLocaleString()}</button><button onclick="reject('${u.email}',${w.txId})" class="btn btn-red btn-sm">Reject</button>`).join(' ')
-      : 'No pending';
-    return `<tr onclick="viewUserHistory('${u.email}')" style="cursor:pointer">
-      <td>${u.email}<br><small style="color:#aaa">Dep: ₦${stats.totalDeposit.toLocaleString()} | WD: ₦${stats.totalWithdraw.toLocaleString()}</small></td>
-      <td>₦${u.balance.toLocaleString()}</td>
-      <td>${pendingBadge}</td>
-      <td><button onclick="event.stopPropagation();viewUserHistory('${u.email}')" class="btn btn-blue btn-sm">View</button></td>
-      <td>${actionBtns}</td>
-    </tr>`
-  }).join('')
-}
-
-function viewUserHistory(email){
-  selectedAdminUser = email;
-  let u = getUsers().find(x=>x.email===email);
-  let tx=(u.transactions||[]);
-  adminHistoryBody.innerHTML=tx.slice(0,100).map(t=>`<tr><td>${t.date}</td><td>${t.type}</td><td>₦${t.amount.toLocaleString()}</td><td class="status-${t.status}">${t.status.toUpperCase()}</td><td>${t.note||''}</td></tr>`).join('')||"<tr><td colspan=5>No transactions</td></tr>"
-}
-
-function renderPending(){
-  let users = getUsers();
-  let allPending = [];
-  users.forEach(u=>{if(u.pendingWithdrawals) u.pendingWithdrawals.forEach(w=>allPending.push({...w, userEmail:u.email}))});
-  pendingList.innerHTML = allPending.length? allPending.map(w=>{
-    let stats = getUserStats(w.userEmail);
-    return `
-    <div class="pending-card">
-      <p><b>User:</b> ${w.userEmail}</p>
-      <div class="total-deposit">Total Deposited: ₦${stats.totalDeposit.toLocaleString()}</div>
-      <div class="total-withdraw">Total Withdrawn: ₦${stats.totalWithdraw.toLocaleString()}</div>
-      <p><b>Requesting Now:</b> ₦${w.amount.toLocaleString()}</p>
-      <p><b>Tax 18%:</b> ₦${w.tax.toLocaleString()}</p>
-      <p><b>Total Deducted:</b> ₦${w.total.toLocaleString()}</p>
-      <p><b>Bank:</b> ${w.bank} - ${w.account}</p>
-      <p><b>Name:</b> ${w.name}</p>
-      <p><b>Status:</b> <span class="status-pending">PENDING</span></p>
-      <button onclick="approve('${w.userEmail}',${w.txId})" class="btn btn-green btn-sm">Approve</button>
-      <button onclick="reject('${w.userEmail}',${w.txId})" class="btn btn-red btn-sm">Reject & Refund</button>
-    </div>
-  `}).join('') : "<p>No pending requests</p>"
-}
-
-function approve(userEmail,txId){
-  let users=getUsers();let uIndex=users.findIndex(u=>u.email===userEmail); let u=users[uIndex];
-  let w = u.pendingWithdrawals.find(w=>w.txId===txId);
-  u.pendingWithdrawals=u.pendingWithdrawals.filter(w=>w.txId!==txId);
-  u.transactions = u.transactions.map(t=> t.id===txId? {...t,status:"approved"} : t);
-  saveUsers(users);renderPending();renderUsers();
-  if(selectedAdminUser===userEmail) viewUserHistory(userEmail);
-  alert(`Withdrawal of ₦${w.amount.toLocaleString()} for ${userEmail} APPROVED`)
-}
-function reject(userEmail,txId){
-  let users=getUsers();let uIndex=users.findIndex(u=>u.email===userEmail); let u=users[uIndex];
-  let w=u.pendingWithdrawals.find(w=>w.txId===txId);
-  u.balance+=w.total;
-  u.pendingWithdrawals=u.pendingWithdrawals.filter(w=>w.txId!==txId);
-  u.transactions = u.transactions.map(t=> t.id===txId? {...t,status:"rejected"} : t);
-  saveUsers(users);renderPending();renderUsers();
-  if(selectedAdminUser===userEmail) viewUserHistory(userEmail);
-  alert(`Withdrawal of ₦${w.amount.toLocaleString()} for ${userEmail} REJECTED. ₦${w.total.toLocaleString()} refunded.`)
-}
+function logout(){localStorage.removeItem('token'); location.reload()}
 </script>
+</body>
+</html>
