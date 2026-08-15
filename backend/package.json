@@ -1,12 +1,16 @@
 {
-  "name": "cashgrid-v1",
+  "name": "cashgrid-backend",
   "version": "1.0.0",
-  "main": "src/backend/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/backend/server.js"
+    "start": "node server.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
-    "mongoose": "^8.0.0"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.4"
   }
 }
