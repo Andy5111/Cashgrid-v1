@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChineMiner v9.4</title>
-<!-- REMOVED PAYHUB SCRIPT - CAUSING ERROR -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
 :root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3; --gold:#FFA000; --orange:#FF9800; --shadow:0 4px 12px rgba(0,0,0,0.08)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
@@ -176,14 +176,14 @@ body{background:var(--light); color:#333}
 </div>
 
 <!-- MODALS -->
-<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><p style="font-size:13px;color:#666">Minimum ₦5,000</p><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-green">Pay with Payhub</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
+<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><p style="font-size:13px;color:#666">Minimum ₦5,000</p><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-green">Pay with Paystack</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
 <div id="withdrawModal" class="modal hidden"><div class="modal-content"><h3>Withdraw Funds</h3><p style="font-size:13px;color:#666">Minimum ₦1,000 | 18% Tax</p><input id="withdrawAmt" type="number" min="1000" placeholder="Amount" class="input"><input id="bankName" placeholder="Bank Name" class="input"><input id="accountNo" placeholder="Account Number" class="input"><input id="accountName" placeholder="Account Name" class="input"><button onclick="withdraw()" class="btn btn-brown">Submit</button><button onclick="closeModal()" class="btn">Cancel</button></div></div>
 
 <script>
 const ADMIN_EMAIL = "andrewdauda555@gmail.com"
 const ADMIN_PASS = "andrewftmo"
-const PAYHUB_PUBLIC_KEY = "pk_live_1fbd5dc52d169275428c772970474ebb" 
-const API_URL = "https://cashgrid-v1.onrender.com" 
+const PAYSTACK_PUBLIC_KEY = "pk_live_xxxxxxxxxxxxxxxxxxxxxxxx" // PUT YOUR LIVE KEY HERE
+const API_URL = "https://cashgrid-v1.onrender.com"
 const MINERS = [
  {id:1,name:"ChineMiner S1",price:5000,daily:500,total:10000,term:20,limit:20,img:"https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400"},
  {id:2,name:"ChineMiner S2",price:10000,daily:1000,total:20000,term:20,limit:10,img:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=400"},
@@ -250,7 +250,7 @@ async function loadDashboard(){
   let uEmail = localStorage.getItem('currentUser');
   const res = await fetch(`${API_URL}/api/user/${uEmail}`);
   let u = await res.json();
-  
+
   if(u.email===ADMIN_EMAIL){
     adminBanner.classList.remove('hidden');adminEmail.innerText = u.email;
     adminUsersBtn.style.display='inline-block';adminPendingBtn.style.display='inline-block';
@@ -266,32 +266,43 @@ function openDeposit(){depositModal.classList.remove('hidden')}
 function openWithdraw(){withdrawModal.classList.remove('hidden')}
 function closeModal(){depositModal.classList.add('hidden');withdrawModal.classList.add('hidden')}
 
-// FINAL FIX: REDIRECT TO PAYHUB INSTEAD OF SCRIPT
+// WORKING PAYSTACK DEPOSIT
 function deposit(){
   let amt=parseInt(depositAmt.value);if(amt<5000)return alert("Min ₦5000");
-  
   let email = localStorage.getItem('currentUser');
-  let ref = 'CM_' + Date.now();
   
-  // Create Payhub payment link
-  let payhubLink = `https://payhub.com.ng/pay/${PAYHUB_PUBLIC_KEY}?amount=${amt*100}&email=${email}&currency=NGN&reference=${ref}&redirect_url=${window.location.origin}`;
-  
-  // Save pending deposit first
-  fetch(`${API_URL}/api/deposit/pending`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({email, amount: amt, reference: ref, status: 'pending'})
+  let handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: email,
+    amount: amt * 100, // Paystack uses kobo
+    ref: 'CM_' + Date.now(),
+    currency: "NGN",
+    callback: async function(response){
+      // Verify payment with backend
+      const verify = await fetch(`${API_URL}/api/verify-payment/${response.reference}`);
+      const data = await verify.json();
+      
+      if(data.status === "success"){
+        await fetch(`${API_URL}/api/deposit`, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({email, amount: amt, reference: response.reference, status: 'approved'})
+        });
+        alert('Deposit Successful! ₦' + amt + ' added');
+        loadDashboard();
+        closeModal();
+      }
+    },
+    onClose: function(){ alert('Payment window closed'); }
   });
-  
-  // Redirect user to pay
-  window.location.href = payhubLink;
+  handler.openIframe();
 }
 
 async function withdraw(){
   let amt=parseInt(withdrawAmt.value),b=bankName.value,a=accountNo.value,n=accountName.value;
   if(amt<1000||!b||!a||!n)return alert("Fill all correctly");
   let tax=amt*0.18,total=amt+tax;
-  
+
   const res = await fetch(`${API_URL}/api/withdraw`, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -355,7 +366,7 @@ async function showTab(tab){userView.classList.add('hidden');usersTab.classList.
 async function renderUsers(){
   const res = await fetch(`${API_URL}/api/admin/users`);
   let users = await res.json();
-  
+
   const totalDeposited = users.reduce((sum, u) => sum + (u.totalDeposited || 0), 0);
   const totalWithdrawn = users.reduce((sum, u) => sum + (u.totalWithdrawn || 0), 0);
   adminStats.innerHTML = `
