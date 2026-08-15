@@ -3,41 +3,44 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const mongoose = require('mongoose');
 
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// ENV Variables
 const PORT = process.env.PORT || 10000;
 const JWT_SECRET = process.env.JWT_SECRET;
-const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const PAYHUB_SECRET = process.env.PAYHUB_SECRET;
+const MONGO_URI = process.env.MONGO_URI;
+
+// Connect MongoDB
+mongoose.connect(MONGO_URI)
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.log('Mongo Error:', err));
 
 // Test Route
-app.get('/', (req, res) => {
-  res.json({ msg: 'CashGrid API Running' });
-});
+app.get('/', (req, res) => res.json({ msg: 'CashGrid API Running with PayHub' }));
 
-// Health Check for Render
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
-});
-
-// Example Login Route
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-  // Simple admin login for testing
-  if(email === ADMIN_EMAIL && password === 'admin123') {
-    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1d' });
-    return res.json({ token });
+// PAYHUB PAYMENT INIT
+app.post('/api/pay', async (req, res) => {
+  const { email, amount } = req.body; // amount in kobo. 50000 = N500
+  try {
+    const response = await axios.post('https://merchant.payhub.com.ng/api/v1/payments/initialize',
+      { email, amount },
+      { headers: { Authorization: `Bearer ${PAYHUB_SECRET}` } }
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.response?.data || error.message });
   }
-  res.status(401).json({ msg: 'Invalid credentials' });
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`CashGrid API running on port ${PORT}`);
+// LOGIN
+app.post('/api/login', (req, res) => {
+  const { email } = req.body;
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1d' });
+  res.json({ token });
 });
+
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
