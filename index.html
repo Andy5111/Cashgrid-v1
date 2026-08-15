@@ -1,237 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cashgrid v1.0</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASHGRID - Invest & Earn</title>
+<script src="https://checkout.payhub.com.ng/v1.js"></script>
 <style>
-:root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3; --gold:#FFA000; --orange:#FF9800; --shadow:0 4px 12px rgba(0,0,0,0.08)}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:var(--light); color:#333}
-.container{max-width:900px;margin:0 auto;padding:15px}
-.hidden{display:none!important}
-.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.auth-card{background:var(--white);border-radius:16px;padding:30px;max-width:400px;width:100%;box-shadow:var(--shadow)}
-.input{width:100%;padding:14px;margin:10px 0;border:1.5px solid #ddd;border-radius:10px;font-size:15px}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-weight:700;margin-top:10px;font-size:15px;cursor:pointer}
-.btn-pink{background:var(--pink);color:white}
-.btn-brown{background:var(--brown);color:white}
-.btn-green{background:var(--green);color:white}
-.btn-red{background:var(--red);color:white}
-.btn-blue{background:var(--blue);color:white}
-.btn-sm{width:auto;padding:8px 14px;font-size:13px}
-.assets-card{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-radius:20px;padding:20px;margin:15px 0;position:relative;overflow:hidden}
-.assets-header{font-size:14px;color:#555;font-weight:600;margin-bottom:8px}
-.assets-amount{font-size:28px;font-weight:800;color:var(--green);margin-bottom:15px}
-.assets-buttons{display:flex;gap:12px}
-.btn-deposit{flex:1;background:linear-gradient(90deg,#00E676,#00C853);color:white;border:none;padding:14px;border-radius:50px;font-weight:800;font-size:15px;cursor:pointer}
-.btn-withdraw{flex:1;background:transparent;color:var(--green);border:1.5px solid var(--green);padding:14px;border-radius:50px;font-weight:800;font-size:15px;cursor:pointer}
-.assets-img{position:absolute;right:-5px;top:15px;width:100px;opacity:0.8}
-.assets-split{display:flex;gap:12px;margin-top:15px}
-.split-box{flex:1;background:white;padding:14px;border-radius:12px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.05)}
-.split-label{font-size:12px;color:#777;margin-bottom:6px}
-.split-value{font-size:17px;font-weight:800;color:#111}
-.section-title{color:var(--brown);font-size:18px;font-weight:800;margin:20px 0 12px}
-.miner-list{display:flex;flex-direction:column;gap:16px}
-.miner-card{background:var(--white);border-radius:16px;box-shadow:var(--shadow);padding:16px}
-.miner-top{display:flex;gap:14px}
-.miner-img{width:110px;height:110px;object-fit:cover;background:#f8f8f8;border-radius:10px}
-.miner-info{flex:1}
-.miner-name{font-size:17px;font-weight:800;color:#111;margin-bottom:8px}
-.miner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
-.label{color:#777;font-size:12px}
-.value{font-weight:700;color:#111}
-.progress-bar{height:6px;background:#eee;border-radius:10px;margin-top:8px;overflow:hidden}
-.progress{height:100%;background:var(--green)}
-.miner-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #eee}
-.price{font-size:18px;font-weight:800;color:var(--green)}
-.btn-invest{background:linear-gradient(90deg,#00C853,#00E676);color:white;border:none;padding:11px 24px;border-radius:25px;font-weight:800;font-size:14px;cursor:pointer}
-.ref-box{background:linear-gradient(135deg,#FFF3E0,#FFECB3);border:2px dashed var(--gold);padding:18px;border-radius:16px;margin:20px 0}
-.ref-title{color:var(--brown);font-size:17px;font-weight:800;margin-bottom:10px}
-.ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
-.stat-card{background:white;padding:12px;border-radius:10px;text-align:center}
-.stat-card.num{font-size:18px;font-weight:800;color:var(--green)}
-.stat-card.txt{font-size:11px;color:#666}
-.ref-link-box{display:flex;gap:8px;margin:12px 0}
-.ref-link{flex:1;background:white;padding:11px;border-radius:8px;border:1px solid #ddd;font-size:12px;word-break:break-all}
-.btn-copy{background:var(--brown);color:white;padding:10px 14px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px}
-.section{background:var(--white);padding:18px;border-radius:16px;box-shadow:var(--shadow);margin:20px 0}
-.section h3{color:var(--brown);margin-bottom:12px;font-size:16px}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999}
-.modal-content{background:white;padding:25px;border-radius:16px;width:90%;max-width:400px}
-.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.tab-btn{padding:8px 14px;border:none;border-radius:8px;background:#eee;font-weight:600;cursor:pointer;font-size:13px}
-.tab-btn.active{background:var(--pink);color:white}
-.history-table{width:100%;border-collapse:collapse;font-size:13px}
-.history-table th{background:var(--pink);color:white;padding:10px;text-align:left}
-.history-table td{padding:10px;border-bottom:1px solid #eee}
-.status-pending{color:var(--orange);font-weight:700}
-.status-completed{color:var(--green);font-weight:700}
-.status-approved{color:var(--green);font-weight:700}
-.status-rejected{color:var(--red);font-weight:700}
-.admin-banner{background:linear-gradient(90deg,#FF3D00,#FF6E40);color:white;padding:12px;border-radius:10px;text-align:center;font-weight:800;margin-bottom:15px}
-.admin-panel{background:#1a1a1a;color:white;border-radius:16px;padding:20px;margin-top:20px}
-.admin-table{width:100%;color:white;font-size:13px;border-collapse:collapse}
-.admin-table th{background:#333;padding:10px;text-align:left}
-.admin-table td{padding:10px;border-bottom:1px solid #333}
-.pending-card{background:#222;padding:15px;border-radius:10px;margin:10px 0}
-.admin-history{margin-top:15px;background:#222;padding:15px;border-radius:10px}
-.badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}
-.badge-pending{background:#FF9800;color:white}
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+    body{background:#0a0a0a;color:#fff}
+    .container{max-width:500px;margin:0 auto;padding:20px}
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .logo{font-size:24px;font-weight:800;color:#00ff88}
+    .balance-card{background:linear-gradient(135deg,#00ff88,#00cc6a);padding:20px;border-radius:15px;margin-bottom:20px}
+    .balance-amount{font-size:32px;font-weight:800}
+    .btn{background:#ffd700;color:#000;border:none;padding:12px 20px;border-radius:10px;font-weight:700;width:100%;margin-top:10px;cursor:pointer}
+    .btn-red{background:#ff4444;color:#fff}
+    .tabs{display:flex;gap:10px;overflow-x:auto;margin-bottom:20px}
+    .tab{padding:10px 15px;background:#1a1a1a;border-radius:8px;cursor:pointer;white-space:nowrap}
+    .tab.active{background:#00ff88;color:#000}
+    .card{background:#1a1a1a;padding:15px;border-radius:12px;margin-bottom:15px}
+    input{width:100%;padding:12px;background:#2a2a2a;border:1px solid #333;border-radius:8px;color:#fff;margin-top:8px}
+    .admin-badge{background:#ffd700;color:#000;padding:3px 8px;border-radius:5px;font-size:12px}
+    .stat-card{background:#2a2a2a;padding:15px;border-radius:10px;text-align:center}
 </style>
 </head>
 <body>
-
-<div id="authPage" class="auth-wrap">
-<div class="auth-card">
-<h1 style="color:var(--brown);text-align:center;margin-bottom:8px">Cashgrid v1.0</h1>
-<input id="email" placeholder="Email Address" class="input">
-<input id="password" type="password" placeholder="Password" class="input">
-<input id="refCodeInput" placeholder="Referral Code - Optional" class="input">
-<button onclick="handleAuth()" class="btn btn-pink" id="authBtn">Create Account</button>
-<button onclick="toggleAuth()" class="btn btn-brown" id="toggleBtn">Already have account? Login</button>
-<p id="msg" style="color:red;text-align:center"></p>
-</div>
-</div>
-
-<div id="dashboardPage" class="hidden">
 <div class="container">
-  <div id="adminBanner" class="admin-banner hidden">🛠 ADMIN MODE ACTIVE - <span id="adminEmail"></span></div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <h2 style="color:var(--brown)">Dashboard</h2>
-    <div>
-      <button onclick="showTab('users')" id="adminUsersBtn" class="btn btn-blue btn-sm" style="display:none">All Users</button>
-      <button onclick="showTab('pending')" id="adminPendingBtn" class="btn btn-brown btn-sm" style="display:none">Pending</button>
-      <button onclick="logout()" class="btn btn-red btn-sm">Logout</button>
+    <div class="header">
+        <div class="logo">CASHGRID</div>
+        <div id="userInfo"></div>
     </div>
-  </div>
 
-  <div id="userView">
-    <div class="assets-card">
-      <img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png" class="assets-img">
-      <div class="assets-header">Total Assets</div>
-      <div class="assets-amount">₦<span id="totalAssets">0</span></div>
-      <div class="assets-buttons">
-        <button class="btn-deposit" onclick="openDeposit()">Deposit</button>
-        <button class="btn-withdraw" onclick="openWithdraw()">Withdraw</button>
-      </div>
-      <div class="assets-split">
-        <div class="split-box"><div class="split-label">Account Balance</div><div class="split-value">₦<span id="accountBalance">0</span></div></div>
-        <div class="split-box"><div class="split-label">Commission Balance</div><div class="split-value">₦<span id="commissionBalance">0</span></div></div>
-      </div>
+    <div id="auth">
+        <h2>Login</h2>
+        <input id="loginEmail" placeholder="Email">
+        <input id="loginPass" type="password" placeholder="Password">
+        <button class="btn" onclick="login()">Login</button>
+        <p style="margin-top:10px">No account? <a onclick="showRegister()" style="color:#00ff88;cursor:pointer">Register</a></p>
     </div>
-    <div class="section-title">Mining Machines</div>
-    <div class="miner-list" id="minersGrid"></div>
-    <div class="section"><h3>Your Active Miners</h3><div class="miner-list" id="activeMiners"></div></div>
-    <div class="section">
-      <div class="ref-box">
-        <div class="ref-title">👑 Referral Program - 3 Levels</div>
-        <div class="ref-stats">
-          <div class="stat-card"><div class="num" id="totalRef">0</div><div class="txt">Total Referrals</div></div>
-          <div class="stat-card"><div class="num">₦<span id="refEarned">0</span></div><div class="txt">Total Earned</div></div>
-          <div class="stat-card"><div class="num">20%</div><div class="txt">L1 Commission</div></div>
+
+    <div id="app" style="display:none">
+        <div class="balance-card">
+            <div>Main Balance</div>
+            <div class="balance-amount" id="balance">₦0</div>
+            <div style="margin-top:10px">Profit: ₦<span id="profit">0</span> | Bonus: ₦<span id="bonus">0</span></div>
         </div>
-        <div class="label">Your Referral Link:</div>
-        <div class="ref-link-box"><div class="ref-link" id="myRefLink"></div><button class="btn-copy" onclick="copyRef()">Copy</button></div>
-      </div>
-    </div>
-    <div class="section">
-      <h3>Transaction History</h3>
-      <div class="tabs">
-        <button class="tab-btn active" onclick="filterHistory('all', this)">All</button>
-        <button class="tab-btn" onclick="filterHistory('deposit', this)">Deposit</button>
-        <button class="tab-btn" onclick="filterHistory('withdraw', this)">Withdrawal</button>
-        <button class="tab-btn" onclick="filterHistory('purchase', this)">Purchase</button>
-      </div>
-      <table class="history-table"><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Note</th></tr></thead><tbody id="historyBody"></tbody></table>
-    </div>
-  </div>
 
-  <div id="usersTab" class="admin-panel hidden">
-    <h3>ALL USERS</h3>
-    <table class="admin-table"><thead><tr><th>Email</th><th>Balance</th><th>Pending</th><th>Action</th></tr></thead><tbody id="adminUsers"></tbody></table>
-  </div>
-  <div id="pendingTab" class="admin-panel hidden">
-    <h3>PENDING WITHDRAWALS</h3>
-    <div id="pendingList"></div>
-  </div>
-</div>
-</div>
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
+            <div class="tab" onclick="showTab('deposit')">Deposit</div>
+            <div class="tab" onclick="showTab('withdraw')">Withdraw</div>
+            <div class="tab" onclick="showTab('history')">History</div>
+            <div class="tab" onclick="showTab('referrals')">Referrals</div>
+            <div class="tab" id="adminTabBtn" style="display:none" onclick="showTab('admin')">Admin</div>
+        </div>
 
-<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><p style="font-size:13px;color:#666">Minimum ₦5,000</p><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-green">Deposit Now</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
-<div id="withdrawModal" class="modal hidden"><div class="modal-content"><h3>Withdraw Funds</h3><p style="font-size:13px;color:#666">Minimum ₦1,000 | 18% Tax</p><input id="withdrawAmt" type="number" min="1000" placeholder="Amount" class="input"><input id="bankName" placeholder="Bank Name" class="input"><input id="accountNo" placeholder="Account Number" class="input"><input id="accountName" placeholder="Account Name" class="input"><button onclick="withdraw()" class="btn btn-brown">Submit</button><button onclick="closeModal()" class="btn">Cancel</button></div>
+        <div id="dashboard" class="tab-content">
+            <button class="btn" onclick="showTab('deposit')">Deposit</button>
+            <button class="btn btn-red" onclick="showTab('withdraw')">Withdraw</button>
+        </div>
+
+        <div id="deposit" class="tab-content" style="display:none">
+            <div class="card">
+                <h3>Deposit Funds</h3>
+                <input id="depositAmount" type="number" placeholder="Min ₦1000">
+                <button class="btn" onclick="submitDeposit()">Pay with Payhub</button>
+            </div>
+        </div>
+
+        <div id="withdraw" class="tab-content" style="display:none">
+            <div class="card">
+                <h3>Withdraw Funds</h3>
+                <input id="withdrawAmount" type="number" placeholder="Amount">
+                <input id="bankName" placeholder="Bank Name">
+                <input id="accountNumber" placeholder="Account Number">
+                <input id="accountName" placeholder="Account Name">
+                <button class="btn btn-red" onclick="submitWithdraw()">Request Withdrawal</button>
+            </div>
+        </div>
+
+        <div id="history" class="tab-content" style="display:none">
+            <div id="historyList"></div>
+        </div>
+
+        <div id="referrals" class="tab-content" style="display:none">
+            <div class="card">
+                <h3>Your Referral Link</h3>
+                <input id="refLink" readonly>
+            </div>
+        </div>
+
+        <div id="admin" class="tab-content" style="display:none">
+            <div id="adminStats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px"></div>
+            <h3>Pending Withdrawals</h3>
+            <div id="pendingList"></div>
+            <h3 style="margin-top:20px">All Users</h3>
+            <div id="usersList"></div>
+        </div>
+    </div>
+</div>
 
 <script>
-const API_URL = "https://cashgrid-v1.onrender.com" // <-- CHANGE THIS
-const ADMIN_EMAIL = "andrewdauda555@gmail.com"
-const MINERS = [
- {id:1,name:"Cashgrid S1",price:5000,daily:500,total:10000,term:20,limit:20,img:"https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400"},
- {id:2,name:"Cashgrid S2",price:10000,daily:1000,total:20000,term:20,limit:10,img:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=400"},
- {id:3,name:"Cashgrid S3",price:30000,daily:3000,total:60000,term:20,limit:5,img:"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400"},
- {id:4,name:"Cashgrid S4",price:70000,daily:7000,total:140000,term:20,limit:3,img:"https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400"},
- {id:5,name:"Cashgrid S5",price:120000,daily:12000,total:240000,term:20,limit:3,img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"},
- {id:6,name:"Cashgrid S6",price:200000,daily:20000,total:400000,term:20,limit:3,img:"https://images.unsplash.com/photo-1548092372-0d1bd40894a3?w=400"},
- {id:7,name:"Cashgrid S7 Pro",price:300000,daily:30000,total:600000,term:20,limit:3,img:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400"}
-]
-let isLogin = false, currentFilter = 'all', token = localStorage.getItem('cashgrid_token'), currentUser = null
+const API_URL = 'https://cashgrid-v1.onrender.com';
+const PAYHUB_PUBLIC_KEY = 'pk_live_1fbd5dc52d169275428c772970474ebb';
+let currentUser = null;
+let users = [];
 
-async function api(path, method = "GET", body = null) {
-  const headers = { "Content-Type": "application/json" }
-  if(token) headers["Authorization"] = token
-  const res = await fetch(API_URL + path, { method, headers, body: body? JSON.stringify(body) : null })
-  return res.json()
+function showTab(tab){
+    document.querySelectorAll('.tab-content').forEach(e=>e.style.display='none');
+    document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+    document.getElementById(tab).style.display='block';
+    event.target.classList.add('active');
+    if(tab==='admin') loadAdmin();
+    if(tab==='history') loadHistory();
 }
 
-window.onload = function(){ if(token) { loadDashboard() } }
-function toggleAuth(){isLogin=!isLogin;authBtn.innerText=isLogin?"Login":"Create Account";toggleBtn.innerText=isLogin?"Need an account? Sign Up":"Already have account? Login"}
+async function login(){
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPass').value;
+    const res = await fetch(`${API_URL}/api/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data = await res.json();
+    if(data.user){
+        currentUser = data.user;
+        document.getElementById('auth').style.display='none';
+        document.getElementById('app').style.display='block';
+        document.getElementById('userInfo').innerHTML = email === 'andrewdauda555@gmail.com' ? 'ADMIN <span class="admin-badge">ADMIN MODE</span>' : email;
+        if(email === 'andrewdauda555@gmail.com') document.getElementById('adminTabBtn').style.display='block';
+        loadUserData();
+    } else alert(data.message);
+}
 
-async function handleAuth(){
-  const e=email.value.trim(), p=password.value.trim(), r=refCodeInput.value.trim(); msg.innerText="";
-  if(!e||!p)return msg.innerText="Fill all";
-  const endpoint = isLogin? '/api/login' : '/api/register';
-  const data = await api(endpoint, 'POST', {name: e.split('@')[0], email:e, phone: '080' + Math.floor(Math.random()*1000000), password:p, refCode:r})
-  if(data.msg) return msg.innerText = data.msg
-  token = data.token; localStorage.setItem('cashgrid_token', token); loadDashboard()
+async function loadUserData(){
+    const res = await fetch(`${API_URL}/api/user/${currentUser._id}`);
+    const data = await res.json();
+    document.getElementById('balance').innerText = '₦' + (data.balance || 0).toLocaleString();
+    document.getElementById('profit').innerText = (data.profit || 0).toLocaleString();
+    document.getElementById('bonus').innerText = (data.bonus || 0).toLocaleString();
+    document.getElementById('refLink').value = window.location.origin + '?ref=' + currentUser._id;
 }
-function logout(){localStorage.removeItem('cashgrid_token'); token=null; location.reload()}
 
-async function loadDashboard(){
-  authPage.classList.add('hidden');dashboardPage.classList.remove('hidden');
-  currentUser = await api('/api/me')
-  if(currentUser.email===ADMIN_EMAIL){
-    adminBanner.classList.remove('hidden');adminEmail.innerText = currentUser.email;
-    adminUsersBtn.style.display='inline-block';adminPendingBtn.style.display='inline-block';
-    userView.classList.add('hidden');showTab('users');
-  } else {
-    adminPendingBtn.style.display='none';
-    updateAssets(currentUser);renderMiners();renderActiveMiners(currentUser);renderReferral(currentUser);renderHistory(currentUser);
-  }
+// 1. DEPOSIT = AUTO VIA PAYHUB
+function submitDeposit(){
+    const amount = document.getElementById('depositAmount').value;
+    if(!amount || amount < 1000) return alert('Min deposit is ₦1000');
+    const handler = PayhubPop.setup({
+        publicKey: PAYHUB_PUBLIC_KEY,
+        email: currentUser.email,
+        amount: amount * 100,
+        currency: 'NGN',
+        ref: 'CG_' + Date.now(),
+        callback: function(response){
+            saveDeposit(currentUser._id, amount, 'approved', response.reference);
+        },
+        onClose: function(){ alert('Payment cancelled'); }
+    });
+    handler.openIframe();
 }
-function updateAssets(u){totalAssets.innerText = (u.balance + u.commission).toLocaleString();accountBalance.innerText = u.balance.toLocaleString();commissionBalance.innerText = u.commission.toLocaleString()}
-function openDeposit(){depositModal.classList.remove('hidden')}
-function openWithdraw(){withdrawModal.classList.remove('hidden')}
-function closeModal(){depositModal.classList.add('hidden');withdrawModal.classList.add('hidden')}
 
-async function deposit(){
-  let amt=parseInt(depositAmt.value);if(amt<5000)return alert("Min ₦5000");
-  await api('/api/wallet/fund', 'POST', {amount: amt}); alert("Deposited"); closeModal(); loadDashboard()
+async function saveDeposit(userId, amount, status, ref){
+    await fetch(`${API_URL}/api/deposit`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({userId, amount, status, reference: ref})
+    });
+    alert('Deposit Successful! ₦' + amount + ' added');
+    loadUserData();
+    showTab('dashboard');
 }
-async function withdraw(){
-  let amt=parseInt(withdrawAmt.value),b=bankName.value,a=accountNo.value,n=accountName.value;
-  if(amt<1000||!b||!a||!n)return alert("Fill all");
-  await api('/api/withdraw', 'POST', {amount: amt, bankName: b, accountNo: a, accountName: n}); alert("Withdrawal Submitted"); closeModal(); loadDashboard()
+
+// 2. WITHDRAW = PENDING ADMIN
+async function submitWithdraw(){
+    const amount = document.getElementById('withdrawAmount').value;
+    const bankName = document.getElementById('bankName').value;
+    const accountNumber = document.getElementById('accountNumber').value;
+    const accountName = document.getElementById('accountName').value;
+    if(!amount || !bankName || !accountNumber) return alert('Fill all fields');
+    await fetch(`${API_URL}/api/withdraw`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({userId: currentUser._id, amount, bankName, accountNumber, accountName, status: 'pending'})
+    });
+    alert('Withdrawal request submitted! Waiting for admin approval');
+    showTab('dashboard');
 }
-function renderReferral(u){myRefLink.innerText = `https://cashgrid.com?ref=${u.refCode}`;totalRef.innerText = u.referrals?.length || 0;refEarned.innerText = u.refEarnings?.toLocaleString() || 0}
-function renderMiners(){minersGrid.innerHTML=MINERS.map(m=>`<div class="miner-card"><div class="miner-top"><img src="${m.img}" class="miner-img"><div class="miner-info"><div class="miner-name">${m.name}</div><div class="miner-grid"><div><div class="label">Daily income</div><div class="value">₦${m.daily.toLocaleString()}</div></div><div><div class="label">Total income</div><div class="value">₦${m.total.toLocaleString()}</div></div><div><div class="label">Term</div><div class="value">${m.term} Days</div></div><div><div class="label">Purchase limit</div><div class="value">${m.limit} Units</div></div></div></div></div><div class="miner-bottom"><div class="price">₦${m.price.toLocaleString()}</div><button onclick="buyMiner(${m.id})" class="btn-invest">Invest</button></div></div>`).join('')}
-async function buyMiner(id){ await api('/api/buy-miner', 'POST', {minerId: id}); alert("Miner Purchased"); loadDashboard() }
-function renderActiveMiners(u){let active = u.miners?.filter(m=>m.active) || [];activeMiners.innerHTML = active.length?active.map(m=>{let data = MINERS.find(x=>x.id===m.id);let percent = (m.daysEarned / data.term) * 100;return `<div class="miner-card"><div class="miner-top"><img src="${data.img}" class="miner-img"><div class="miner-info"><div class="miner-name">${data.name} <span style="color:var(--green)">ACTIVE</span></div><div class="miner-grid"><div><div class="label">Daily Profit</div><div class="value">₦${m.profit.toLocaleString()}</div></div><div><div class="label">Days Left</div><div class="value">${data.term - m.daysEarned} Days</div></div></div><div class="progress-bar"><div class="progress" style="width:${percent}%"></div></div></div></div></div>`}).join(''):"<p style='color:#888'>No active miners</p>"}
-function renderHistory(u){let tx=(u.transactions||[]); if(currentFilter!== 'all') tx = tx.filter(t=>t.type===currentFilter); historyBody.innerHTML=tx.slice(0,100).map(t=>`<tr><td>${t.date}</td><td>${t.type}</td><td>₦${t.amount.toLocaleString()}</td><td class="status-${t.status}">${t.status.toUpperCase()}</td><td>${t.note||''}</td></tr>`).join('')||"<tr><td colspan=5>No transactions</td></tr>"}
-function filterHistory(type, el){currentFilter=type;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderHistory(currentUser)}
-function copyRef(){navigator.clipboard.writeText(myRefLink.innerText);alert("Referral link copied!")}
-async function showTab(tab){userView.classList.add('hidden');usersTab.classList.add('hidden');pendingTab.classList.add('hidden');document.getElementById(tab+'Tab').classList.remove('hidden');if(tab==='users') renderUsers();if(tab==='pending') renderPending();}
-async function renderUsers(){ let users = await api('/api/admin/users'); adminUsers.innerHTML = users.map(u=>`<tr><td>${u.email}</td><td>₦${u.balance.toLocaleString()}</td><td>${u.pendingWithdrawals?.length || 0}</td><td>${u.pendingWithdrawals?.length > 0? `<button onclick="approve('${u.email}',${u.pendingWithdrawals[0].txId})" class="btn btn-green btn-sm">Approve</button>` : 'None'}</td></tr>`).join('')}
-async function renderPending(){ let users = await api('/api/admin/users'); let allPending = []; users.forEach(u=>{if(u.pendingWithdrawals) u.pendingWithdrawals.forEach(w=>allPending.push({...w, userEmail:u.email}))}); pendingList.innerHTML = allPending.map(w=>`<div class="pending-card"><p><b>User:</b> ${w.userEmail}</p><p><b>Amount:</b> ₦${w.amount.toLocaleString()}</p><button onclick="approve('${w.userEmail}',${w.txId})" class="btn btn-green btn-sm">Approve</button><button onclick="reject('${w.userEmail}',${w.txId})" class="btn btn-red btn-sm">Reject</button></div>`).join('') || "<p>No pending</p>"}
-async function approve(userEmail,txId){ await api('/api/admin/approve', 'POST', {userEmail, txId}); alert("Approved"); renderUsers(); renderPending() }
-async function reject(userEmail,txId){ await api('/api/admin/reject', 'POST', {userEmail, txId}); alert("Rejected"); renderUsers(); renderPending() }
+
+// 3. ADMIN PANEL WITH TOTALS
+async function loadAdmin(){
+    const res = await fetch(`${API_URL}/api/admin/users`);
+    users = await res.json();
+    
+    const totalDeposited = users.reduce((sum, u) => sum + (u.totalDeposited || 0), 0);
+    const totalWithdrawn = users.reduce((sum, u) => sum + (u.totalWithdrawn || 0), 0);
+    
+    document.getElementById('adminStats').innerHTML = `
+        <div class="stat-card">Total Deposited<br><b>₦${totalDeposited.toLocaleString()}</b></div>
+        <div class="stat-card">Total Withdrawn<br><b>₦${totalWithdrawn.toLocaleString()}</b></div>
+    `;
+
+    document.getElementById('usersList').innerHTML = users.map(u=>`
+        <div class="card">${u.email} - Bal: ₦${u.balance}</div>
+    `).join('');
+
+    const wRes = await fetch(`${API_URL}/api/admin/withdrawals`);
+    const withdrawals = await wRes.json();
+    document.getElementById('pendingList').innerHTML = withdrawals.filter(w=>w.status==='pending').map(w=>`
+        <div class="card">${w.userId.email} - ₦${w.amount}
+        <button class="btn" onclick="approveWithdraw('${w._id}')">Approve</button>
+        </div>
+    `).join('');
+}
+
+async function approveWithdraw(id){
+    await fetch(`${API_URL}/api/admin/withdraw/approve/${id}`,{method:'POST'});
+    alert('Withdrawal Approved');
+    loadAdmin();
+}
+
+async function loadHistory(){
+    const res = await fetch(`${API_URL}/api/history/${currentUser._id}`);
+    const data = await res.json();
+    document.getElementById('historyList').innerHTML = data.map(h=>`
+        <div class="card">${h.type} - ₦${h.amount} - <span style="color:${h.status==='approved'?'#00ff88':'#ffd700'}">${h.status}</span></div>
+    `).join('');
+}
 </script>
 </body>
-</html>
+  </html>
