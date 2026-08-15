@@ -1,16 +1,12 @@
 {
-  "name": "cashgrid-backend",
+  "name": "cashgrid-v1",
   "version": "1.0.0",
-  "description": "CashGrid API",
-  "main": "server.js",
+  "main": "src/backend/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node src/backend/server.js"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2"
+    "mongoose": "^8.0.0"
   }
 }
