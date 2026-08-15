@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChineMiner v9.4</title>
-<!-- ADD 1: PAYHUB SCRIPT -->
-<script src="https://checkout.payhub.com.ng/v1.js"></script>
+<!-- FIXED PAYHUB SCRIPT -->
+<script src="https://payhub.com.ng/v1.js"></script>
 <style>
 :root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3; --gold:#FFA000; --orange:#FF9800; --shadow:0 4px 12px rgba(0,0,0,0.08)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
@@ -78,7 +78,6 @@ body{background:var(--light); color:#333}
 .admin-history{margin-top:15px;background:#222;padding:15px;border-radius:10px}
 .badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}
 .badge-pending{background:#FF9800;color:white}
-/* ADD 2: ADMIN STATS CARDS */
 .stat-card-admin{background:#2a2a2a;padding:15px;border-radius:10px;text-align:center;color:white}
 </style>
 </head>
@@ -159,7 +158,6 @@ body{background:var(--light); color:#333}
 
   <!-- ADMIN USERS -->
   <div id="usersTab" class="admin-panel hidden">
-    <!-- ADD 3: ADMIN TOTALS -->
     <div id="adminStats" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px"></div>
     <h3>ALL USERS - PENDING ACTIONS</h3>
     <table class="admin-table"><thead><tr><th>Email</th><th>Balance</th><th>Pending</th><th>History</th><th>Action</th></tr></thead><tbody id="adminUsers"></tbody></table>
@@ -269,7 +267,6 @@ function openDeposit(){depositModal.classList.remove('hidden')}
 function openWithdraw(){withdrawModal.classList.remove('hidden')}
 function closeModal(){depositModal.classList.add('hidden');withdrawModal.classList.add('hidden')}
 
-// ADD 4: DEPOSIT WITH PAYHUB FIX
 function deposit(){
   let amt=parseInt(depositAmt.value);if(amt<5000)return alert("Min ₦5000");
   
@@ -278,7 +275,7 @@ function deposit(){
   }
 
   const handler = PayhubPop.setup({
-    key: PAYHUB_PUBLIC_KEY, // FIX: use 'key' not 'publicKey'
+    key: PAYHUB_PUBLIC_KEY,
     email: localStorage.getItem('currentUser'),
     amount: amt * 100,
     currency: "NGN",
