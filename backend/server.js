@@ -1,45 +1,69 @@
 const express = require('express');
 const cors = require('cors');
+const fetch = require('node-fetch');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// TEMP: Replace with your real DB later
-let USERS = { "test@test.com": { balance: 0 } } 
+// TEMP DB - Replace with MongoDB later
+let USERS = { "andrewdauda555@gmail.com": { balance: 0 } } 
 
-// 1. CREATE PAYMENT LINK - redirects to your static Payhub link
+const PAYHUB_SECRET = process.env.PAYHUB_SECRET_KEY; // We will set this in Render
+
+// 1. CREATE PAYMENT LINK
 app.post('/api/create-payment', async (req, res) => {
   const { email, amount, reference } = req.body;
   
-  // 1. Save pending deposit
-  console.log("New deposit:", {email, amount, reference, status: "pending"})
+  if(!PAYHUB_SECRET) return res.status(500).json({error: "Secret key not set"})
 
-  // 2. Redirect to your static payhub link with amount
-  const payment_url = `https://checkout.juntpay.top/cashier/bank-transfer/7abb7f99f765950f7833c7118b031fae888d4ee78438f03d9282ac8680760200a22485f626ef06c17f3243b96ffb6ec3?amount=${amount}&email=${email}&reference=${reference}`
-  
-  res.json({ payment_url });
-});
-
-// 2. WEBHOOK - Payhub will call this when payment is successful
-app.post('/api/webhook/payhub', async (req, res) => {
-  const data = req.body;
-  console.log("WEBHOOK RECEIVED:", data)
-
-  // Payhub sends status, amount, reference, email
-  if(data.status === 'success' || data.status === 'paid'){
-    const { email, amount, reference } = data;
+  try {
+    const response = await fetch('https://api.payhub.com.ng/v1/transactions/initialize', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${PAYHUB_SECRET}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        amount: amount * 100, // Convert to kobo
+        reference: reference,
+        callback_url: `https://cashgrid-v1.onrender.com/api/webhook/payhub`,
+        currency: "NGN"
+      })
+    });
     
-    // 1. Credit user balance
-    if(USERS[email]){
-      USERS[email].balance += parseFloat(amount);
-      console.log(`Credited ${email} with ${amount}. New balance: ${USERS[email].balance}`)
+    const data = await response.json();
+    console.log("Payhub Response:", data)
+    
+    if(data.status === true){
+      res.json({ payment_url: data.data.authorization_url });
+    } else {
+      res.status(400).json({ error: data.message });
     }
     
-    // 2. Mark reference as paid in DB so it doesn't credit twice
+  } catch(err){
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 2. WEBHOOK - Payhub calls this after payment
+app.post('/api/webhook/payhub', async (req, res) => {
+  const data = req.body;
+  console.log("WEBHOOK HIT:", data)
+  
+  if(data.event === 'charge.success'){
+    const { customer, amount, reference } = data.data;
+    const email = customer.email;
+    const nairaAmount = amount / 100;
+    
+    if(USERS[email]){
+      USERS[email].balance += nairaAmount;
+      console.log(`Credited ${email} with ${nairaAmount}. New balance: ${USERS[email].balance}`)
+    }
   }
   
-  res.status(200).json({ received: true }); // MUST return 200
+  res.status(200).json({ status: "success" });
 });
 
 // 3. GET BALANCE
