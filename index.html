@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ChineMiner v9.4</title>
-<script src="https://js.paystack.co/v1/inline.js"></script>
+<title>CASHGRID V1</title>
 <style>
 :root {--pink:#FF69B4; --brown:#8B4513; --light:#F5FFF8; --white:#fff; --green:#00C853; --red:#FF3D00; --blue:#2196F3; --gold:#FFA000; --orange:#FF9800; --shadow:0 4px 12px rgba(0,0,0,0.08)}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
@@ -85,7 +84,7 @@ body{background:var(--light); color:#333}
 <!-- AUTH PAGE -->
 <div id="authPage" class="auth-wrap">
 <div class="auth-card">
-<h1 style="color:var(--brown);text-align:center;margin-bottom:8px">ChineMiner v9.4</h1>
+<h1 style="color:var(--brown);text-align:center;margin-bottom:8px">CASHGRID V1</h1>
 <input id="email" placeholder="Email Address" class="input">
 <input id="password" type="password" placeholder="Password" class="input">
 <input id="refCodeInput" placeholder="Referral Code - Optional" class="input">
@@ -176,14 +175,15 @@ body{background:var(--light); color:#333}
 </div>
 
 <!-- MODALS -->
-<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><p style="font-size:13px;color:#666">Minimum ₦5,000</p><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-green">Pay with Paystack</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
+<div id="depositModal" class="modal hidden"><div class="modal-content"><h3>Deposit Funds</h3><p style="font-size:13px;color:#666">Minimum ₦5,000. You will be redirected to Payhub</p><input id="depositAmt" type="number" min="5000" placeholder="Enter Amount" class="input"><button onclick="deposit()" class="btn btn-green">Pay with Payhub</button><button onclick="closeModal()" class="btn btn-brown">Cancel</button></div></div>
 <div id="withdrawModal" class="modal hidden"><div class="modal-content"><h3>Withdraw Funds</h3><p style="font-size:13px;color:#666">Minimum ₦1,000 | 18% Tax</p><input id="withdrawAmt" type="number" min="1000" placeholder="Amount" class="input"><input id="bankName" placeholder="Bank Name" class="input"><input id="accountNo" placeholder="Account Number" class="input"><input id="accountName" placeholder="Account Name" class="input"><button onclick="withdraw()" class="btn btn-brown">Submit</button><button onclick="closeModal()" class="btn">Cancel</button></div></div>
 
 <script>
 const ADMIN_EMAIL = "andrewdauda555@gmail.com"
 const ADMIN_PASS = "andrewftmo"
-const PAYSTACK_PUBLIC_KEY = "pk_live_xxxxxxxxxxxxxxxxxxxxxxxx" // PUT YOUR LIVE KEY HERE
 const API_URL = "https://cashgrid-v1.onrender.com"
+const PAYHUB_LINK = "https://checkout.juntpay.top/cashier/bank-transfer/7abb7f99f765950f7833c7118b031fae888d4ee78438f03d9282ac8680760200a22485f626ef06c17f3243b96ffb6ec3"
+
 const MINERS = [
  {id:1,name:"ChineMiner S1",price:5000,daily:500,total:10000,term:20,limit:20,img:"https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400"},
  {id:2,name:"ChineMiner S2",price:10000,daily:1000,total:20000,term:20,limit:10,img:"https://images.unsplash.com/photo-1518770660439-4636190af475?w=400"},
@@ -207,15 +207,6 @@ let isLogin = false, currentFilter = 'all', selectedAdminUser = null
 function getUser(){return JSON.parse(localStorage.getItem('users'))?.find(u=>u.email===localStorage.getItem('currentUser'))}
 function saveUsers(users){localStorage.setItem('users',JSON.stringify(users))}
 function getUsers(){return JSON.parse(localStorage.getItem('users'))||[]}
-
-function addTransactionToUser(email, tx){
-  let users = getUsers();
-  let userIndex = users.findIndex(u=>u.email===email);
-  if(userIndex === -1) return;
-  if(!users[userIndex].transactions) users[userIndex].transactions = [];
-  users[userIndex].transactions.unshift(tx);
-  saveUsers(users);
-}
 
 function prependHistoryRow(tx){
   if(currentFilter!== 'all' && currentFilter!== tx.type) return;
@@ -266,36 +257,23 @@ function openDeposit(){depositModal.classList.remove('hidden')}
 function openWithdraw(){withdrawModal.classList.remove('hidden')}
 function closeModal(){depositModal.classList.add('hidden');withdrawModal.classList.add('hidden')}
 
-// WORKING PAYSTACK DEPOSIT
-function deposit(){
+// FINAL DEPOSIT - OPENS YOUR PAYHUB LINK
+async function deposit(){
   let amt=parseInt(depositAmt.value);if(amt<5000)return alert("Min ₦5000");
   let email = localStorage.getItem('currentUser');
-  
-  let handler = PaystackPop.setup({
-    key: PAYSTACK_PUBLIC_KEY,
-    email: email,
-    amount: amt * 100, // Paystack uses kobo
-    ref: 'CM_' + Date.now(),
-    currency: "NGN",
-    callback: async function(response){
-      // Verify payment with backend
-      const verify = await fetch(`${API_URL}/api/verify-payment/${response.reference}`);
-      const data = await verify.json();
-      
-      if(data.status === "success"){
-        await fetch(`${API_URL}/api/deposit`, {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({email, amount: amt, reference: response.reference, status: 'approved'})
-        });
-        alert('Deposit Successful! ₦' + amt + ' added');
-        loadDashboard();
-        closeModal();
-      }
-    },
-    onClose: function(){ alert('Payment window closed'); }
+  let ref = 'CM_' + Date.now();
+
+  // Create pending deposit first
+  await fetch(`${API_URL}/api/deposit/pending`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email, amount: amt, reference: ref, status: 'pending'})
   });
-  handler.openIframe();
+
+  // Open your exact Payhub link
+  window.open(PAYHUB_LINK, '_blank');
+  alert('Complete payment on Payhub. After payment click OK and refresh to see balance');
+  closeModal();
 }
 
 async function withdraw(){
@@ -315,7 +293,7 @@ async function withdraw(){
   }
 }
 
-function renderReferral(u){myRefLink.innerText = `https://chineminer.com?ref=${u.refCode}`;totalRef.innerText = u.referrals.length;refEarned.innerText = u.refEarnings.toLocaleString()}
+function renderReferral(u){myRefLink.innerText = `https://cashgrid.com?ref=${u.refCode}`;totalRef.innerText = u.referrals.length;refEarned.innerText = u.refEarnings.toLocaleString()}
 
 function payCommission(buyerEmail, amount){
   let users = getUsers();let buyer = users.find(u=>u.email===buyerEmail);let currentCode = buyer.referredBy;let level = 0;
@@ -422,4 +400,4 @@ async function reject(id){
 }
 </script>
 </body>
-</html>
+                                                                                                </html>
