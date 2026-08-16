@@ -1,45 +1,52 @@
 const express = require('express');
-const fetch = require('node-fetch'); // npm i node-fetch@2
-const cors = require('cors'); // npm i cors
+const cors = require('cors');
 const app = express();
 
-app.use(cors()); // allow frontend to call backend
+app.use(cors());
 app.use(express.json());
 
-const PAYHUB_SECRET_KEY = process.env.PAYHUB_SECRET_KEY; // from Render env
+// TEMP: Replace with your real DB later
+let USERS = { "test@test.com": { balance: 0 } } 
 
-// TEST ROUTE
-app.get('/', (req, res) => {
-  res.send('CASHGRID V1 Backend is running');
-});
-
-// CREATE PAYMENT LINK
+// 1. CREATE PAYMENT LINK - redirects to your static Payhub link
 app.post('/api/create-payment', async (req, res) => {
   const { email, amount, reference } = req.body;
+  
+  // 1. Save pending deposit
+  console.log("New deposit:", {email, amount, reference, status: "pending"})
 
-  try {
-    const response = await fetch('https://api.juntpay.top/v1/payment', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + PAYHUB_SECRET_KEY,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        amount: amount,
-        currency: 'NGN',
-        email: email,
-        reference: reference,
-        redirect_url: 'https://ashgrid-v1.netlify.app' // change to your netlify url
-      })
-    });
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  // 2. Redirect to your static payhub link with amount
+  const payment_url = `https://checkout.juntpay.top/cashier/bank-transfer/7abb7f99f765950f7833c7118b031fae888d4ee78438f03d9282ac8680760200a22485f626ef06c17f3243b96ffb6ec3?amount=${amount}&email=${email}&reference=${reference}`
+  
+  res.json({ payment_url });
 });
 
-// KEEP ALL YOUR OTHER ROUTES: /api/login, /api/register, /api/user, /api/withdraw etc HERE
+// 2. WEBHOOK - Payhub will call this when payment is successful
+app.post('/api/webhook/payhub', async (req, res) => {
+  const data = req.body;
+  console.log("WEBHOOK RECEIVED:", data)
+
+  // Payhub sends status, amount, reference, email
+  if(data.status === 'success' || data.status === 'paid'){
+    const { email, amount, reference } = data;
+    
+    // 1. Credit user balance
+    if(USERS[email]){
+      USERS[email].balance += parseFloat(amount);
+      console.log(`Credited ${email} with ${amount}. New balance: ${USERS[email].balance}`)
+    }
+    
+    // 2. Mark reference as paid in DB so it doesn't credit twice
+  }
+  
+  res.status(200).json({ received: true }); // MUST return 200
+});
+
+// 3. GET BALANCE
+app.get('/api/user', (req, res) => {
+  const email = req.headers['x-user-email'];
+  res.json({ balance: USERS[email]?.balance || 0 })
+})
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
